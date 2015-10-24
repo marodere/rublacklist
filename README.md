@@ -2,10 +2,9 @@ rublacklist
 ======
 maintain routing table based on RKN registry
 ---------------
-`fetch_blacklist.sh` is the script that simply fetches RKN registry from rublacklist.net
-Run it at least once before trying to use the next script.
+`fetch_blacklist.sh` is the script that simply fetches RKN registry from rublacklist.net. Run it at least once before trying to use the next script.
 ---------------
-`route.sh` is the script that builds routing table based on list of ip addresses. It *should* be specified as the "route-up" openvpn parameter but also it can be executed alone (manually, by cron, etc) For the first time it *should* be executed from openvpn to parse nameservers and gateway from envinroment and store it for fruther use.
+`route.sh` is the script that builds routing table based on list of ip addresses. It *should* be specified as the "route-up" openvpn parameter but also it can be executed alone (manually, by cron, etc) For the first time it *should* be executed from openvpn to parse nameservers and gateway from envinroment and store it for further use.
 ---------------
 I use two routing tables: vpn0 and vpn1. I use "ip rule add/del" to switch between them. To use the script you *should* define them like this:
 
