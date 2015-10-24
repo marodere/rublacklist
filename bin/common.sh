@@ -10,7 +10,7 @@ blacklistfile=${vardir}/blacklist.txt
 logfile=${vardir}/log/route.log
 update_flag=${vardir}/blacklist_updated
 
-bind_ns_config="/etc/bind/named.conf.forwarders.privateinternetaccess"
+bind_ns_config="/etc/bind/named.conf.forwarders.vpn"
 
 teelogcmd="cat"
 if [ -t 0 ]; then

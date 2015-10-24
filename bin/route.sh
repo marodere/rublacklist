@@ -127,7 +127,7 @@ if [ -n "${route_vpn_gateway:-}" ]; then
 	add_nameservers
 else
 	# probably running from crontab
-	read blacklist_processed_mtime < ${blacklistfile}.timestamp.processed
+	read blacklist_processed_mtime < ${blacklistfile}.timestamp.processed || blacklist_processed_mtime=0
 	if [ "${blacklist_mtime}" == "${blacklist_processed_mtime}" ]; then
 		log "[I] the blacklist has not changed since %d, nothing to do" "${blacklist_processed_mtime}"
 		exit 0
