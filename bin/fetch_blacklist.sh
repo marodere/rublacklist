@@ -2,6 +2,7 @@
 set -e -u -o pipefail
 
 . ${BASH_SOURCE%/*}/common.sh
+logfile=${vardir}/log/fetch_blacklist.log
 
 function write_blacklist() {
 	local old_md5 new_md5

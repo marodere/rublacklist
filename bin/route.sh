@@ -2,6 +2,7 @@
 set -e -u -o pipefail
 
 . ${BASH_SOURCE%/*}/common.sh
+logfile=${vardir}/log/route.log
 
 function valid_ip() {
 	local err=0 glob_err=0
