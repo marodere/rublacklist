@@ -8,7 +8,7 @@ function write_blacklist() {
 	local old_md5 new_md5
 	old_md5=$(md5sum ${blacklistfile} | awk '{ print $1 }')
 	log "[I] fetching new blacklist"
-	wget -O ${blacklistfile}.new http://reestr.rublacklist.net/api/ips
+	wget -O ${blacklistfile}.new https://api.antizapret.info/all.php
 	new_md5=$(md5sum ${blacklistfile}.new | awk '{ print $1 }')
 	if [ "${old_md5}" != "${new_md5}" ]; then
 		mv -f ${blacklistfile}.new ${blacklistfile}

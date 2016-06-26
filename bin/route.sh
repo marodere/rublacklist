@@ -53,16 +53,16 @@ function add_route() {
 		log "[W] add_route failed"
 		return 1
 	fi
-	/bin/ip route add ${addr} via ${gw} table ${new_rt_table}
+	/bin/ip route add ${addr} via ${gw} dev ${dev} table ${new_rt_table}
 }
 
 function store_gw() {
-	log "[I] got fresh route_vpn_gateway=\"%s\"" "${route_vpn_gateway}"
+	log "[I] got fresh route_vpn_gateway=\"%s\" dev=\"%s\"" "${route_vpn_gateway}" "${dev}"
 	if ! valid_ip "${route_vpn_gateway}"; then
 		log "[E] suspicious route, bailing out"
 		return 1
 	fi
-	printf "%s" "route_vpn_gateway=${route_vpn_gateway}" > ${gwfile}
+	printf "%s\n%s" "route_vpn_gateway=${route_vpn_gateway}" "dev=${dev}" > ${gwfile}
 }
 
 function get_gw() {
@@ -95,7 +95,7 @@ function add_nameservers() {
 			if [ "${opt}" != "${opt#dhcp-option DNS *}" ] ; then
 				ns=${opt#dhcp-option DNS *}
 				valid_ip "${ns}" || { log "[E] suspicious nameserver"; return 1; }
-				(set -x; /bin/ip route add "${ns}" via "${route_vpn_gateway}")
+				(set -x; /bin/ip route add "${ns}" via "${route_vpn_gateway}" dev "${dev}")
 				printf "%s; " "${ns}"
 			fi
 			(( ++i ))
@@ -106,7 +106,7 @@ function add_nameservers() {
 
 function build_blacklist_routing_table() {
 	flock -s -w 30 ${blacklistfile}.lck cat ${blacklistfile} | \
-	sed -e 's/"//g' -e 's/;/\n/g' | \
+	awk -v 'FS=;' '{ print $NF }' | sed -e 's/,/\n/g' | sort -u | \
 	(
 		local counter=0
 		local failed=0
@@ -140,8 +140,7 @@ log "[I] deal with rt_table %s" "${new_rt_table}"
 
 eval $(get_gw)
 /bin/ip route flush table ${new_rt_table}
-/bin/ip route add ${route_vpn_gateway} dev tun0 table ${new_rt_table}
-add_route "$(host -t A reestr.rublacklist.net | awk '{ print $NF }')" "${route_vpn_gateway}"
+/bin/ip route add ${route_vpn_gateway} dev ${dev} table ${new_rt_table}
 build_blacklist_routing_table
 make_rt_table_active ${new_rt_table}
 
